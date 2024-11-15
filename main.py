@@ -1,0 +1,87 @@
+import os
+
+from agent import get_graph
+from inputs import from_github
+from langchain_core.messages import HumanMessage
+from tools import get_pr_metadata
+import traceback
+from composio import Action, ComposioToolSet
+import json
+
+listener = ComposioToolSet().create_trigger_listener()
+
+# Triggers when a new event takes place
+@listener.callback(filters={"trigger_name": "GITHUB_PULL_REQUEST_EVENT"})
+def callback_function(event):
+    try: 
+        payload = event.payload
+        action = payload.get("action")
+        if action not in ["opened", "reopened"]:
+            return
+        
+        url = payload.get("url")
+        split_url = url.split("/")
+        owner = split_url[-4]
+        repo_name = split_url[-3]
+        pull_number = payload.get("number")
+
+        run_agent(owner, repo_name, pull_number)
+
+    except Exception as e:
+        traceback.print_exc()
+
+
+def run_agent(owner, repo_name, pull_number) -> None:
+    repo_path = f"/home/user/{repo_name}"
+
+    graph, composio_toolset = get_graph(repo_path)
+
+    composio_toolset.execute_action(
+        action=Action.FILETOOL_GIT_CLONE,
+        params={"repo_name": f"{owner}/{repo_name}"},
+    )
+    composio_toolset.execute_action(
+        action=Action.FILETOOL_CHANGE_WORKING_DIRECTORY,
+        params={"path": repo_path},
+    )
+    composio_toolset.execute_action(
+        action=Action.CODE_ANALYSIS_TOOL_CREATE_CODE_MAP,
+        params={},
+    )
+
+    response = composio_toolset.execute_action(
+        action=get_pr_metadata,
+        params={
+            "owner": owner,
+            "repo": repo_name,
+            "pull_number": str(pull_number),
+            "thought": "Get the metadata for the PR",
+        },
+    )
+    base_commit = response["data"]["metadata"]["base"]["sha"]
+
+    composio_toolset.execute_action(
+        action=Action.FILETOOL_GIT_CLONE,
+        params={
+            "repo_name": f"{owner}/{repo_name}",
+            "just_reset": True,
+            "commit_id": base_commit,
+        },
+    )
+
+    run_result = graph.invoke(
+        {
+            "messages": [
+                HumanMessage(
+                    content=f"You have {owner}/{repo_name} cloned at your current working directory. Review PR {pull_number} on this repository and create comments on the same PR"
+                )
+            ]
+        },
+        {"recursion_limit": 50},
+    )
+
+    print(run_result)
+
+
+if __name__ == "__main__":
+    listener.listen()
