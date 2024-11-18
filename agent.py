@@ -3,7 +3,6 @@ import os
 import typing as t
 from enum import Enum
 
-import dotenv
 from langchain_aws import ChatBedrock
 from langchain_core.messages import AIMessage, BaseMessage, HumanMessage, ToolMessage
 from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
@@ -16,8 +15,6 @@ from tools import DiffFormatter, get_pr_diff, get_pr_metadata
 
 from composio_langgraph import Action, App, ComposioToolSet, WorkspaceType
 
-
-dotenv.load_dotenv()
 
 class Model(str, Enum):
     CLAUDE = "claude"
@@ -106,7 +103,7 @@ def _github_list_review_comments_on_a_pull_request_post_proc(response: dict) -> 
 
 def get_graph(repo_path):
     toolset = ComposioToolSet(
-        workspace_config=WorkspaceType.Docker(),
+        workspace_config=WorkspaceType.Host(),
         metadata={
             App.CODE_ANALYSIS_TOOL: {
                 "dir_to_index_path": repo_path,
@@ -173,7 +170,7 @@ def get_graph(repo_path):
 
     if model == Model.CLAUDE:
         client = ChatBedrock(
-            credentials_profile_name="default",
+            # credentials_profile_name="default",
             model_id="anthropic.claude-3-5-sonnet-20240620-v1:0",
             region_name="us-east-1",
             model_kwargs={"temperature": 0, "max_tokens": 8192},

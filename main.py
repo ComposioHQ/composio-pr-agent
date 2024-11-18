@@ -37,6 +37,11 @@ def run_agent(owner, repo_name, pull_number) -> None:
     graph, composio_toolset = get_graph(repo_path)
 
     composio_toolset.execute_action(
+        action=Action.FILETOOL_CHANGE_WORKING_DIRECTORY,
+        params={"path": "/home/user/"},
+    )
+
+    composio_toolset.execute_action(
         action=Action.FILETOOL_GIT_CLONE,
         params={"repo_name": f"{owner}/{repo_name}"},
     )
