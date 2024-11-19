@@ -82,11 +82,11 @@ def run_agent(owner, repo_name, pull_number) -> None:
                 )
             ]
         },
-        {"recursion_limit": 50},
+        {"recursion_limit": 70},
     )
 
     print(run_result)
 
 
 if __name__ == "__main__":
-    listener.listen()
+    listener.wait_forever()

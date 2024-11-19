@@ -86,8 +86,6 @@ You have access to the following tools:
 Your ideal approach to reviewing the code should be:
 1. Analysis: 
    - Analyze the diffs to form an understanding of the changes made in the PR in context of the codebase.
-   - If you feel you need more information about the codebase, respond with "ANALYZE REPO" 
-     along with precise details of the information you need.
 
 2. Reviewing the code:
    - Call the `GITHUB_GET_A_COMMIT` tool to get the diff of the commit to get the exact line numbers of the diff

@@ -8,10 +8,12 @@ from langchain_core.messages import AIMessage, BaseMessage, HumanMessage, ToolMe
 from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
 from langchain_openai import ChatOpenAI
 from langgraph.graph import END, START, StateGraph
+from langgraph.graph.state import CompiledStateGraph
 from langgraph.prebuilt import ToolNode
 from prompts import PR_COMMENT_PROMPT, PR_FETCHER_PROMPT, REPO_ANALYZER_PROMPT
 from tenacity import retry, stop_after_attempt, wait_exponential
 from tools import DiffFormatter, get_pr_diff, get_pr_metadata
+from langchain_core.runnables.graph import MermaidDrawMethod
 
 from composio_langgraph import Action, App, ComposioToolSet, WorkspaceType
 
@@ -21,6 +23,26 @@ class Model(str, Enum):
     OPENAI = "openai"
 
 model = Model.CLAUDE
+
+def print_graph(graph: CompiledStateGraph):
+    # Import necessary modules
+    import os
+    from io import BytesIO
+
+    from IPython.display import Image, display
+    from PIL import Image
+
+    # Generate the Mermaid PNG
+    png_data = graph.get_graph().draw_mermaid_png(
+        draw_method=MermaidDrawMethod.API,
+    )
+
+    # Create a PIL Image from the PNG data
+    image = Image.open(BytesIO(png_data))
+
+    # Save the image
+    output_path = "workflow_graph.png"
+    image.save(output_path)
 
 
 def add_thought_to_request(request: t.Dict[str, t.Any]) -> t.Dict[str, t.Any]:
@@ -330,7 +352,7 @@ def get_graph(repo_path):
 
     def comment_on_pr_router(
         state,
-    ) -> t.Literal["comment_on_pr_tools_node", "continue", "analyze_repo", "__end__"]:
+    ) -> t.Literal["comment_on_pr_tools_node", "continue", "__end__"]:
         messages = state["messages"]
         for message in reversed(messages):
             if isinstance(message, AIMessage):
@@ -341,8 +363,6 @@ def get_graph(repo_path):
 
         if last_ai_message.tool_calls:
             return "comment_on_pr_tools_node"
-        if "ANALYZE REPO" in last_ai_message.content:
-            return "analyze_repo"
         if "REVIEW COMPLETED" in last_ai_message.content:
             return "__end__"
         return "continue"
@@ -357,7 +377,6 @@ def get_graph(repo_path):
         comment_on_pr_router,
         {
             "continue": comment_on_pr_agent_name,
-            "analyze_repo": repo_analyzer_agent_name,
             "comment_on_pr_tools_node": "comment_on_pr_tools_node",
             "__end__": END,
         },
