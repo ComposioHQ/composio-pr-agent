@@ -6,8 +6,8 @@ TAG = latest
 all: clean build run
 
 clean:
-	docker rm -f $$(docker ps -a -q --filter ancestor=$(IMAGE_NAME):$(TAG))
-	docker rmi -f $(IMAGE_NAME):$(TAG)
+	-docker rm -f $$(docker ps -a -q --filter ancestor=$(IMAGE_NAME):$(TAG))
+	-docker rmi -f $(IMAGE_NAME):$(TAG)
 
 build:
 	docker build -f Dockerfile -t $(IMAGE_NAME):$(TAG) .
