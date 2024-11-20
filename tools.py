@@ -147,7 +147,7 @@ class DiffFormatter:
 
 
 @action(toolname="github")
-def get_pr_diff(owner: str, repo: str, pull_number: str, thought: str) -> str:
+def get_pr_diff(owner: str, repo: str, pull_number: str, thought: str, auth: t.Dict) -> str:
     """
     Get .diff data for a github PR.
 
@@ -163,13 +163,14 @@ def get_pr_diff(owner: str, repo: str, pull_number: str, thought: str) -> str:
             owner=owner,
             repo=repo,
             pull_number=pull_number,
-        )
+        ),
+        headers=auth.get("headers", {})
     ).text
     return DiffFormatter(diff_text).parse_and_format()
 
 
 @action(toolname="github")
-def get_pr_metadata(owner: str, repo: str, pull_number: str, thought: str) -> t.Dict:
+def get_pr_metadata(owner: str, repo: str, pull_number: str, thought: str, auth: t.Dict) -> t.Dict:
     """
     Get metadata for a github PR.
 
@@ -186,7 +187,8 @@ def get_pr_metadata(owner: str, repo: str, pull_number: str, thought: str) -> t.
             owner=owner,
             repo=repo,
             pull_number=pull_number,
-        )
+        ),
+        headers=auth.get("headers", {})
     ).json()
 
     response = {
