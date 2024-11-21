@@ -6,14 +6,16 @@ from langchain_core.messages import HumanMessage
 from tools import get_pr_metadata
 import traceback
 from composio import Action, ComposioToolSet
-import json
+from composio.utils.logging import get_logger
 
 listener = ComposioToolSet().create_trigger_listener()
+logger = get_logger(__name__)
 
 # Triggers when a new event takes place
 @listener.callback(filters={"trigger_name": "GITHUB_PULL_REQUEST_EVENT"})
 def callback_function(event):
     try: 
+        logger.info("Received trigger GITHUB_PULL_REQUEST_EVENT")
         payload = event.payload
         action = payload.get("action")
         if action not in ["opened", "reopened"]:
@@ -24,6 +26,8 @@ def callback_function(event):
         owner = split_url[-4]
         repo_name = split_url[-3]
         pull_number = payload.get("number")
+
+        logger.info(f"Running PR Review agent for pull request {url}")
 
         run_agent(owner, repo_name, pull_number)
 
@@ -49,10 +53,6 @@ def run_agent(owner, repo_name, pull_number) -> None:
         action=Action.FILETOOL_CHANGE_WORKING_DIRECTORY,
         params={"path": repo_path},
     )
-    composio_toolset.execute_action(
-        action=Action.CODE_ANALYSIS_TOOL_CREATE_CODE_MAP,
-        params={},
-    )
 
     response = composio_toolset.execute_action(
         action=get_pr_metadata,
@@ -72,6 +72,11 @@ def run_agent(owner, repo_name, pull_number) -> None:
             "just_reset": True,
             "commit_id": base_commit,
         },
+    )
+
+    composio_toolset.execute_action(
+        action=Action.CODE_ANALYSIS_TOOL_CREATE_CODE_MAP,
+        params={},
     )
 
     run_result = graph.invoke(

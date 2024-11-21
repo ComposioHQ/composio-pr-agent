@@ -16,4 +16,4 @@ delete:
 	docker rm -f $$(docker ps -a -q --filter ancestor=$(IMAGE_NAME):$(TAG))
 
 run:
-	docker run -d --name composio-pr-agent --env-file .env $(IMAGE_NAME):$(TAG)
+	docker run -d --name composio-pr-agent --restart unless-stopped --env-file .env $(IMAGE_NAME):$(TAG)

@@ -95,7 +95,8 @@ Your ideal approach to reviewing the code should be:
 
 3. Leaving final thoughts:
    - Once you're done reviewing the code, leave a final comment where you rate the changes made
-     in the PR in terms of code quality.
+     in the PR in terms of code quality using the `GITHUB_CREATE_AN_ISSUE_COMMENT` tool. If the tool is already called,
+     do not call this again.
 
 To help the maintainers you can also
 - Suggest bug fixes if you found any
@@ -111,7 +112,10 @@ TO GET THE EXACT LINE NUMBERS OF THE COMMIT DIFF. IGNORE IF ALREADY CALLED. ALSO
 TO CALL THE `GITHUB_LIST_REVIEW_COMMENTS_ON_A_PULL_REQUEST` TOOL TO CHECK IF THE COMMENT HAS
 ALREADY BEEN MADE AND AVOID MAKING DUPLICATE COMMENTS.
 
-NOTE: BE CONCISE AND TO THE POINT WHILE COMMENTING. NO NEED TO BE VERBOSE.
+NOTE: BE CONCISE AND TO THE POINT WHILE COMMENTING. NO NEED TO BE VERBOSE. ALSO, DO NOT 
+CALL `GITHUB_CREATE_AN_ISSUE_COMMENT` TOOL WHEN IT IS ALREADY CALLED, THAT IS, CREATE ONLY ONE 
+REVIEW COMMENT.
+
 
 Once you're done with commenting on the PR and are satisfied with the review you have provided, 
 respond with "REVIEW COMPLETED"

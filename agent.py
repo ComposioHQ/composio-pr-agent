@@ -193,8 +193,8 @@ def get_graph(repo_path):
     if model == Model.CLAUDE:
         client = ChatBedrock(
             # credentials_profile_name="default",
-            model_id="anthropic.claude-3-5-sonnet-20240620-v1:0",
-            region_name="us-east-1",
+            model_id="anthropic.claude-3-5-sonnet-20241022-v2:0",
+            region_name="us-west-2",
             model_kwargs={"temperature": 0, "max_tokens": 8192},
         )
     else:
