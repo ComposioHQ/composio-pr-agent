@@ -61,7 +61,10 @@ Analyse the information about the diffs and use these tools to fetch useful info
 about the codebase. This information will be used by your colleagues to provide good 
 code reviews.
 Keep calling the tools until you have context of the codebase about the diff provided in the PR.
-Once you have the context, respond with "ANALYSIS COMPLETED"
+Once you have the context, respond with "ANALYSIS COMPLETED". Also provide a concise summary of the
+information you found about the codebase that is relevant to the ticket.
+
+NOTE: IGNORE THE PLACEHOLDER MESSAGE.
 """
 
 PR_COMMENT_PROMPT = """
