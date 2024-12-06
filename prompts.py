@@ -110,6 +110,9 @@ To help the maintainers you can also
   - Comments that help understanding the code better in future
 - Find any possible typos
 
+You have the information about the PR (commits and diff) as well as the information from the 
+repository in the conversation. Use them to create meaningful comments on the PR.
+
 NOTE: YOU NEED TO CALL THE `GITHUB_GET_A_COMMIT` TOOL IN THE BEGINNING OF REVIEW PROCESS
 TO GET THE EXACT LINE NUMBERS OF THE COMMIT DIFF. IGNORE IF ALREADY CALLED. ALSO, YOU NEED
 TO CALL THE `GITHUB_LIST_REVIEW_COMMENTS_ON_A_PULL_REQUEST` TOOL TO CHECK IF THE COMMENT HAS
