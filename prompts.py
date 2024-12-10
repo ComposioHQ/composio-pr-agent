@@ -62,7 +62,7 @@ about the codebase. This information will be used by your colleagues to provide 
 code reviews.
 Keep calling the tools until you have context of the codebase about the diff provided in the PR.
 Once you have the context, respond with "ANALYSIS COMPLETED". Also provide a concise summary of the
-information you found about the codebase that is relevant to the ticket.
+information you found about the codebase that is relevant to the pr.
 
 NOTE: IGNORE THE PLACEHOLDER MESSAGE.
 """
@@ -125,4 +125,6 @@ REVIEW COMMENT.
 
 Once you're done with commenting on the PR and are satisfied with the review you have provided, 
 respond with "REVIEW COMPLETED"
+
+NOTE: IGNORE THE PLACEHOLDER MESSAGE. YOU MUST PROCEED WITH THE TASK OF REVIEWING THE CODE.
 """

@@ -1,4 +1,4 @@
-FROM composio/composio:latest
+FROM composio/composio:dev
 
 USER root
 RUN chmod 755 /root/entrypoint.sh
