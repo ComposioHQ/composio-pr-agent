@@ -129,6 +129,7 @@ def get_graph(repo_path):
         metadata={
             App.CODE_ANALYSIS_TOOL: {
                 "dir_to_index_path": repo_path,
+                "create_index": False
             }
         },
         processors={
