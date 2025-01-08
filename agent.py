@@ -191,6 +191,14 @@ def get_graph(repo_path):
         )
     ]
 
+    dummy_tools = toolset.get_tools(
+        actions=[
+            Action.FILETOOL_CHANGE_WORKING_DIRECTORY,
+            Action.FILETOOL_GIT_CLONE,
+            Action.CODE_ANALYSIS_TOOL_CREATE_CODE_MAP,
+        ]
+    )
+
     if model == Model.CLAUDE:
         client = ChatBedrock(
             # credentials_profile_name="default",
