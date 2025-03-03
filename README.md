@@ -10,6 +10,7 @@ A Pull Request review automation system using Composio.
 ## Environment Setup
 
 Create a GITHUB_PULL_REQUEST_EVENT trigger in your Composio account. Follow the instructions [here](https://docs.composio.dev/introduction/intro/quickstart_3).
+MAKE SURE YOUR GITHUB ACCOUNT HAS ADMIN ACCESS TO THE REPO YOU WISH TO CREATE TRIGGER ON.
 
 Create a `.env` file in the root directory with your required environment variables:
 - COMPOSIO_API_KEY
